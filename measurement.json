@@ -1,0 +1,32 @@
+{
+  "commit": "c8f3ba45304f0a317a49a155929e30d294f201eb",
+  "segment_shape": [
+    1024,
+    1024
+  ],
+  "image_nonzero": 1048576,
+  "image_source": "PHercParis4_20231022170901_level3_z54.zarr",
+  "validation_source": null,
+  "supervision_source": null,
+  "backend": "Array",
+  "patch_size": 256,
+  "overlap": 0.5,
+  "patches": 64,
+  "identical": true,
+  "upstream_seconds": [
+    0.4971145539984718,
+    0.4800699679999525,
+    0.4757323610010644,
+    0.48833428699981596,
+    0.46668380300070567
+  ],
+  "patched_seconds": [
+    0.02842203900036111,
+    0.025380277998920064,
+    0.02417260000038368,
+    0.026090199000464054,
+    0.025117351000517374
+  ],
+  "median_speedup": 18.915079181574747,
+  "scope": "Unlabeled patch discovery only. Subsequent iterations can reuse warmed data."
+}
