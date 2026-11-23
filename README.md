@@ -22,3 +22,9 @@ python reproduce.py upstream.py patched.py
 ```
 
 To apply the change to the pinned Villa checkout, run `git apply /path/to/villa_unlabeled.patch` from its root. The permissive license covers the contributed changes and benchmark scripts. Upstream code and public scan data retain their original terms.
+
+## Whole-plane replication, 23 November 2026
+
+The complete 669 × 3,620 middle plane at pyramid level 5 includes irregular edges and zero-filled areas. Both revisions returned the same 149 training boxes in the same order and zero held-out boxes. Four alternating runs per revision in fresh processes had median discovery times of 1.865 s upstream and 0.109 s patched (17.17×). Timings exclude network transfer and local Zarr construction. This measures patch discovery on the middle plane, not end-to-end model training.
+
+After applying the patch as above, run `python whole_plane.py upstream.py patched.py`. The script fetches the public scan, validates its metadata and compares ordered output hashes. [Raw measurements](measurement_level5.json).
