@@ -1,0 +1,45 @@
+--- a/vesuvius/src/vesuvius/ink_detection/data/patch_finding_default.py
++++ b/vesuvius/src/vesuvius/ink_detection/data/patch_finding_default.py
+@@ -170,9 +170,6 @@
+         else open_volume(segment.validation_mask, scan_scale)
+     )
+     surface_slice = np.asarray(scan_volume[scan_surface])
+-    ys, xs = np.nonzero(surface_slice)
+-    if len(ys) == 0:
+-        raise ValueError(f"{segment.image_volume} contains no nonzero projected data")
+     stride = max(
+         1,
+         int(
+@@ -182,9 +179,19 @@
+             )
+         ),
+     )
+-    corners = np.unique(
+-        np.stack([ys // stride * stride, xs // stride * stride], axis=1), axis=0
++    # Reduce contiguous columns first. Partial bottom and right cells are kept.
++    # Boolean reduction avoids allocating two intp arrays per nonzero pixel.
++    if surface_slice.size == 0:
++        raise ValueError(f"{segment.image_volume} contains no nonzero projected data")
++    row_cells = np.logical_or.reduceat(
++        surface_slice, np.arange(0, surface_slice.shape[1], stride), axis=1
++    )
++    occupied = np.logical_or.reduceat(
++        row_cells, np.arange(0, surface_slice.shape[0], stride), axis=0
+     )
++    corners = np.argwhere(occupied) * stride
++    if not corners.size:
++        raise ValueError(f"{segment.image_volume} contains no nonzero projected data")
+     scan_h = max(1, int(round(patch_size[1] / scale_y)))
+     scan_w = max(1, int(round(patch_size[2] / scale_x)))
+     sup_surface = (
+@@ -194,9 +201,7 @@
+     training: list[Patch] = []
+     for y_scan, x_scan in corners.tolist():
+         y_scan, x_scan = int(y_scan), int(x_scan)
+-        image_patch = scan_volume[
+-            scan_surface, y_scan : y_scan + scan_h, x_scan : x_scan + scan_w
+-        ]
++        image_patch = surface_slice[y_scan : y_scan + scan_h, x_scan : x_scan + scan_w]
+         coverage = 0.0 if image_patch.size == 0 else (
+             float(np.count_nonzero(image_patch)) / float(image_patch.size)
+         )

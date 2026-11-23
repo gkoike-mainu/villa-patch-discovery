@@ -1,0 +1,136 @@
+{
+  "source": "https://vesuvius-challenge-open-data.s3.amazonaws.com/PHercParis4/segments/20231005123336/surface-volumes/2.4um-0.22m-78keV-volume-20260411134726.zarr/5",
+  "source_planes": [
+    53,
+    54,
+    55
+  ],
+  "shape": [
+    3,
+    1090,
+    3040
+  ],
+  "sha256": "3daf0c3d8e7fa31cedac1ef37719e981702c4973462cd5db308f9911fe3509a0",
+  "middle_nonzero": 2874473,
+  "runs": {
+    "upstream": [
+      {
+        "discovery_seconds": 2.497227202000431,
+        "workflow_seconds": 2.8519169989995135,
+        "peak_rss_kib": 197040,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 2.4633762600005866,
+        "workflow_seconds": 2.8197198740017484,
+        "peak_rss_kib": 197116,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 2.348500365998916,
+        "workflow_seconds": 2.666136154999549,
+        "peak_rss_kib": 196792,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 2.501087741999072,
+        "workflow_seconds": 2.816331545000139,
+        "peak_rss_kib": 196996,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      }
+    ],
+    "previous": [
+      {
+        "discovery_seconds": 0.1418599919998087,
+        "workflow_seconds": 0.5365909880001709,
+        "peak_rss_kib": 140668,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 0.1417358510007034,
+        "workflow_seconds": 0.6582434299998567,
+        "peak_rss_kib": 139956,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 0.13340324300042994,
+        "workflow_seconds": 0.7681915989996924,
+        "peak_rss_kib": 139968,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 0.1290924509994511,
+        "workflow_seconds": 0.7137022129991237,
+        "peak_rss_kib": 140180,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      }
+    ],
+    "candidate": [
+      {
+        "discovery_seconds": 0.08564276800098014,
+        "workflow_seconds": 0.43800446900058887,
+        "peak_rss_kib": 75848,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 0.07450422200054163,
+        "workflow_seconds": 0.4263493189992005,
+        "peak_rss_kib": 75848,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 0.1109721279990481,
+        "workflow_seconds": 0.5097421549999126,
+        "peak_rss_kib": 75848,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      },
+      {
+        "discovery_seconds": 0.07660054000007221,
+        "workflow_seconds": 0.3824627229987527,
+        "peak_rss_kib": 75848,
+        "windows": 205,
+        "validation": 0,
+        "digest": "a7564f9381aa0f86370bb7cfa6f4f86fbaace4c968949bceaf0554346ffdd82a"
+      }
+    ]
+  },
+  "medians": {
+    "upstream": {
+      "discovery_seconds": 2.480301731000509,
+      "workflow_seconds": 2.8180257095009438,
+      "peak_rss_kib": 197018.0
+    },
+    "previous": {
+      "discovery_seconds": 0.13756954700056667,
+      "workflow_seconds": 0.6859728214994902,
+      "peak_rss_kib": 140074.0
+    },
+    "candidate": {
+      "discovery_seconds": 0.08112165400052618,
+      "workflow_seconds": 0.4321768939998947,
+      "peak_rss_kib": 75848.0
+    }
+  }
+}

@@ -28,3 +28,28 @@ To apply the change to the pinned Villa checkout, run `git apply /path/to/villa_
 The complete 669 × 3,620 middle plane at pyramid level 5 includes irregular edges and zero-filled areas. Both revisions returned the same 149 training boxes in the same order and zero held-out boxes. Four alternating runs per revision in fresh processes had median discovery times of 1.865 s upstream and 0.109 s patched (17.17×). Timings exclude network transfer and local Zarr construction. This measures patch discovery on the middle plane, not end-to-end model training.
 
 After applying the patch as above, run `python whole_plane.py upstream.py patched.py`. The script fetches the public scan, validates its metadata and compares ordered output hashes. [Raw measurements](measurement_level5.json).
+
+## Second segment and three-plane patch reads
+
+The revised patch uses NumPy reductions over rows and columns to find occupied stride cells. This avoids creating coordinate arrays for every nonzero pixel. The minimum coverage rule, clipping and traversal order still apply. Use `villa_unlabeled_v2.patch` directly on the pinned upstream revision. The original patch remains available to reproduce the earlier measurements.
+
+The new benchmark uses depth planes 53–55 of segment 20231005123336, level 5. It stores the 3 × 1,090 × 3,040 slab as local Zarr chunks. For every region identified on the middle plane, the benchmark reads the surrounding three-layer patch and records its bounds, shape, flag, intensity sum and nonzero count. All three implementations yielded identical ordered records for 205 regions. Four fresh processes per implementation ran in alternating order.
+
+| Median | Upstream | First patch | Revised patch |
+| --- | ---: | ---: | ---: |
+| Discover candidate regions (seconds) | 2.480 | 0.138 | 0.081 |
+| Discover and read all patches (seconds) | 2.818 | 0.686 | 0.432 |
+| Peak process RSS (MiB) | 192.4 | 136.8 | 74.1 |
+
+These measurements cover one local, dense slab without supervision masks and exclude initial data download. The complete benchmark includes imports in peak memory. Slab coordinates use local depth indices 0–2. A separate deterministic test covers masked inputs, nearly empty arrays, negative values, NaNs, different scan scales, clipped windows and different strides in 320 cases. End-to-end training, segmentation accuracy and text recovery were outside the benchmark.
+
+To reproduce, fetch the same upstream file using the command above, then run the commands below on Linux with NumPy and Zarr installed.
+
+```sh
+patch -o previous.py upstream.py < villa_unlabeled.patch
+patch -o candidate.py upstream.py < villa_unlabeled_v2.patch
+python test_equivalence.py upstream.py candidate.py
+python benchmark_slab.py ./scan-cache upstream.py previous.py candidate.py
+```
+
+[Measurements with per-run timings and fingerprints](measurement_second_segment.json).
