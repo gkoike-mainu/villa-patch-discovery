@@ -1,0 +1,63 @@
+{
+  "source": "https://vesuvius-challenge-open-data.s3.amazonaws.com/PHercParis4/segments/20231022170901/surface-volumes/2.4um-0.22m-78keV-volume-20260411134726.zarr/5",
+  "middle_plane": 54,
+  "shape": [
+    669,
+    3620
+  ],
+  "nonzero": 2133208,
+  "sha256": "49cf8e7ce2e97edee8bdea6d53bdf14455b6b82e58b91e3865bd0f0e0c1895c3",
+  "upstream": [
+    {
+      "seconds": 1.8402733409984648,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    },
+    {
+      "seconds": 1.8685704809995514,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    },
+    {
+      "seconds": 2.0298565119992418,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    },
+    {
+      "seconds": 1.8609928920013772,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    }
+  ],
+  "patched": [
+    {
+      "seconds": 0.10550265799975023,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    },
+    {
+      "seconds": 0.1614054120000219,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    },
+    {
+      "seconds": 0.10354640199875575,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    },
+    {
+      "seconds": 0.1116595170005894,
+      "count": 149,
+      "heldout": 0,
+      "ordered_bbox_sha256": "30298667883e60672c99075cdf3d0ed8c3a6f9837a62c2566355d94cf7f74dc3"
+    }
+  ],
+  "median_speedup": 17.17409292384871
+}
