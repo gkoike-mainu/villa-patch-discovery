@@ -1,0 +1,116 @@
+--- a/vesuvius/src/vesuvius/ink_detection/data/patch_finding_default.py
++++ b/vesuvius/src/vesuvius/ink_detection/data/patch_finding_default.py
+@@ -22,12 +22,11 @@
+     patch = np.asarray(label_patch)
+     if patch.size == 0:
+         return 0.0
+-    labeled_y, labeled_x = np.nonzero(patch)
+-    if labeled_y.size == 0:
++    rows = np.flatnonzero(np.any(patch, axis=1))
++    if not rows.size:
+         return 0.0
+-    area = (
+-        int(labeled_y.max()) - int(labeled_y.min()) + 1
+-    ) * (int(labeled_x.max()) - int(labeled_x.min()) + 1)
++    columns = np.flatnonzero(np.any(patch[rows[0]:rows[-1] + 1], axis=0))
++    area = (int(rows[-1]) - int(rows[0]) + 1) * (int(columns[-1]) - int(columns[0]) + 1)
+     return float(area) / float(patch.size)
+ 
+ 
+@@ -62,6 +61,37 @@
+     return scan_scale, scan_volume, int(scan_volume.shape[0] // 2), surface, scale_y, scale_x
+ 
+ 
++def _occupied_patch_origins(
++    surface_slice: np.ndarray,
++    stride: int,
++    *,
++    positive_only: bool = False,
++    validation: np.ndarray | None = None,
++) -> np.ndarray:
++    """Occupancy in row-major order without materializing nonzero pixel coordinates."""
++    height, width = surface_slice.shape
++    if validation is not None and validation.shape != surface_slice.shape:
++        raise ValueError(f"validation support {validation.shape} != supervision {surface_slice.shape}")
++    if not height or not width:
++        return np.empty((0, 2), dtype=np.intp)
++    columns = np.arange(0, width, stride)
++    # Sweep row bands so intermediate memory stays bounded even at stride 1.
++    band = max(stride, ((1 << 20) // width // stride) * stride)
++    origins = []
++    for top in range(0, height, band):
++        image = surface_slice[top:top + band]
++        if positive_only:
++            image = image > 0
++            if validation is not None:
++                image |= validation[top:top + band] > 0
++        row_cells = np.logical_or.reduceat(image, columns, axis=1)
++        cells = np.logical_or.reduceat(row_cells, np.arange(0, len(image), stride), axis=0)
++        points = np.argwhere(cells) * stride
++        points[:, 0] += top
++        origins.append(points)
++    return np.concatenate(origins)
++
++
+ def find_segment_patches(
+     segment: Segment, open_volume: Callable[[str, int], object]
+ ) -> tuple[list[Patch], list[Patch]]:
+@@ -89,10 +119,6 @@
+     inklabels = np.asarray(inklabels[ink_surface])
+     if validation is not None:
+         validation = np.asarray(validation[validation_surface])
+-    support = combined_patch_discovery_support(supervision, validation)
+-    ys, xs = np.nonzero(support)
+-    if len(ys) == 0:
+-        raise ValueError(f"{segment.supervision_mask} contains no nonzero voxels at scan scale")
+     stride = max(
+         1,
+         int(
+@@ -102,10 +128,9 @@
+             )
+         ),
+     )
+-    # Mark occupied stride cells; np.argwhere keeps np.unique's row-major order.
+-    occupied = np.zeros((support.shape[0] // stride + 1, support.shape[1] // stride + 1), bool)
+-    occupied[ys // stride, xs // stride] = True
+-    corners = np.argwhere(occupied) * stride
++    corners = _occupied_patch_origins(supervision, stride, positive_only=True, validation=validation)
++    if not len(corners):
++        raise ValueError(f"{segment.supervision_mask} contains no nonzero voxels at scan scale")
+     scan_h = max(1, int(round(patch_size[1] / scale_y)))
+     scan_w = max(1, int(round(patch_size[2] / scale_x)))
+     training: list[Patch] = []
+@@ -170,9 +195,6 @@
+         else open_volume(segment.validation_mask, scan_scale)
+     )
+     surface_slice = np.asarray(scan_volume[scan_surface])
+-    ys, xs = np.nonzero(surface_slice)
+-    if len(ys) == 0:
+-        raise ValueError(f"{segment.image_volume} contains no nonzero projected data")
+     stride = max(
+         1,
+         int(
+@@ -182,9 +204,9 @@
+             )
+         ),
+     )
+-    corners = np.unique(
+-        np.stack([ys // stride * stride, xs // stride * stride], axis=1), axis=0
+-    )
++    corners = _occupied_patch_origins(surface_slice, stride)
++    if not corners.size:
++        raise ValueError(f"{segment.image_volume} contains no nonzero projected data")
+     scan_h = max(1, int(round(patch_size[1] / scale_y)))
+     scan_w = max(1, int(round(patch_size[2] / scale_x)))
+     sup_surface = (
+@@ -194,9 +216,7 @@
+     training: list[Patch] = []
+     for y_scan, x_scan in corners.tolist():
+         y_scan, x_scan = int(y_scan), int(x_scan)
+-        image_patch = scan_volume[
+-            scan_surface, y_scan : y_scan + scan_h, x_scan : x_scan + scan_w
+-        ]
++        image_patch = surface_slice[y_scan : y_scan + scan_h, x_scan : x_scan + scan_w]
+         coverage = 0.0 if image_patch.size == 0 else (
+             float(np.count_nonzero(image_patch)) / float(image_patch.size)
+         )
